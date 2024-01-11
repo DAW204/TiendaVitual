@@ -14,6 +14,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
         //holiwiw
         //kkkkk
         //duijhiudhiudhìoab
+        
+        /*adioooooooooooooooooooooooooooooooooooooooooooooos*/
         ?>
     </body>
 </html>
