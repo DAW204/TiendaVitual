@@ -13,6 +13,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
         // put your code here
         //holiwiw
         //kkkkk
+        //duijhiudhiudhìoab
         ?>
     </body>
 </html>
