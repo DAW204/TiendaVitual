@@ -12,6 +12,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
         <?php
         // put your code here
         //me aburro
+        //fsojfnsdnf
+        //sfs
         ?>
     </body>
 </html>
