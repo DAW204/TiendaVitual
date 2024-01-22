@@ -16,6 +16,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
         //duijhiudhiudhìoab
         //Aqui andamos a 22-01-2024
         /*adioooooooooooooooooooooooooooooooooooooooooooooos*/
+        //hola
         ?>
     </body>
 </html>
