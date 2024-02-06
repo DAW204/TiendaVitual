@@ -25,7 +25,7 @@ and open the template in the editor.
         mysqli_select_db($conexion, "proyecto")
                 or die("No se puede seleccionar la base de datos");
         
-        
+         $consultaLibros = "select * from libros;";
         
         ?>
         
@@ -33,8 +33,8 @@ and open the template in the editor.
         <form name="enviar" action="carrito" method="POST">
             
             LIBROS DISPONIBLES <BR><BR>
-            <input type="checkbox" name="LIBRO" value="ON" />
-            
+            <input type="checkbox" name="Alas de sangre" value="ON" />
+            <input type="checkbox" name="Alas de hierro" value="ON" />
             
             
             <input type="submit" value="Buscar" name="enviarInsertar" />
