@@ -5,18 +5,18 @@
 class Producto
 {
     /* Propiedades del objeto producto */
-
     private $titulo;
     private $precio;
     private $cantidad;
 
     /* Constructor */
-
     public function __construct($titulo, $precio, $cantidad)
     {
         $this->titulo = $titulo;
-        $this->titulo = $precio;
-        $this->titulo = $cantidad;
+        $this->precio = $precio;
+        $this->cantidad = $cantidad;
+        
+       
     }
 
     /* GET/ SET TITULO */

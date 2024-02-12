@@ -2,8 +2,8 @@
 <?php
 
 require_once './Producto.php';
-//Pruebame
-class Cesta
+
+class Cesta implements Serializable
 {
     /* Propied del objeto cesta, en este caso un arrya de objetos producto */
 
@@ -32,7 +32,20 @@ class Cesta
 
     public function agregarProducto($producto)
     {
+
         $this->productos[] = $producto;
+    }
+
+    // Implementación del método serialize
+    public function serialize()
+    {
+        return serialize($this->productos);
+    }
+
+    // Implementación del método unserialize
+    public function unserialize($data)
+    {
+        $this->productos = unserialize($data);
     }
 
 }

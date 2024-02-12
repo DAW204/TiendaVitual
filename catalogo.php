@@ -4,6 +4,7 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
+
 <html>
     <head>
         <meta charset="UTF-8">
@@ -50,8 +51,9 @@ and open the template in the editor.
         /* Si la cesta esta vacia entra en el if */
         if (!isset($_SESSION['cesta']))
         {
-            /* Si esta vacio se crea una nueva cesta, para despues introducir productos */
-            $_SESSION['cesta'] = new Cesta();
+            /* Se crea una cesta vacia y se guarda serializada en la variable de sesion */
+            $nuevaCesta = new Cesta();
+            $_SESSION['cesta'] = $nuevaCesta->serialize();
         }
 
 
@@ -70,7 +72,7 @@ and open the template in the editor.
 
 
         /* Sacamos la fila */
-        //$datosConsulta = mysqli_fetch_assoc($consulta);
+//$datosConsulta = mysqli_fetch_assoc($consulta);
         ?>
 
 
@@ -118,7 +120,12 @@ and open the template in the editor.
               y el valor se corresponde a la cantidad de ese libro que ha selecionado el usuario */
             $cantidades = $_POST['cantidad'];
 
-
+            /*Se crea una cesta vacia para obtener la cesta de la variable de sesion*/
+            $cesta = new Cesta();
+            
+            /*Guardamos la cesta en la variable de sesion serializada*/
+            $cesta -> unserialize($_SESSION['cesta']);
+            
             /* Recorremos con el foreach el array devuelto y extraemos las claves y sus valores */
             foreach ($cantidades as $clave => $cantidad)
             {
@@ -136,25 +143,24 @@ and open the template in the editor.
                     $tituloDelLibro = $partesClaves[0];
                     $precioLibro = (float) $partesClaves[1];
 
-
-
-                    // Imprimir las partes
-                    echo "Nombre: " . $tituloDelLibro . "<br>";
-                    echo "Precio: " . $precioLibro . "<br>";
-                    
-                    
-                    /*Creamos un objeto producto*/
+                    /* Creamos un objeto producto */
                     $producto = new Producto($tituloDelLibro, $precioLibro, $cantidad);
-                    
-                    $_SESSION['cesta'] ->agregarProducto($producto);
-                    
-                    
-                }
 
+
+                    /*Agregamos los productos a la cesta*/
+                    $cesta->agregarProducto($producto);
+                }
+            }
+
+            foreach ($cesta->getProductos() as $producto)
+            {
+                echo "Producto: " . $producto->getTitulo() . "<br>";
+                echo "Precio: " . $producto->getPrecio() . "<br>";
+                echo "Cantidad: " . $producto->getCantidad() . "<br><br>";
             }
             
-            
-             
+            /*Guardamos la cesta en la variable de sesion serializada*/
+            $_SESSION['cesta'] = $cesta->serialize();
         }
         ?>
     </body>

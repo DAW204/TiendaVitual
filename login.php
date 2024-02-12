@@ -71,7 +71,7 @@
              {
                 /*Obtengo el rol (invitado,registrado....) de la consulta realizada*/
                 $_SESSION['rol']= $datosConsulta['rol'];
-                
+                 
                 print $_SESSION['rol'];
                  
                 // Credenciales válidas, iniciar sesión
