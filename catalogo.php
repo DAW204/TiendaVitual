@@ -69,7 +69,7 @@ and open the template in the editor.
 
 
         /* Sacamos la fila */
-//$datosConsulta = mysqli_fetch_assoc($consulta);
+        //$datosConsulta = mysqli_fetch_assoc($consulta);
         ?>
 
 
@@ -98,72 +98,70 @@ and open the template in the editor.
                     </tr>
 
 
-<?php } ?>
+                <?php } ?>
 
             </table>
 
             <br><br>
             <input type="submit" value="comprar" name="enviar" />
 
-        </form>
+        </form><br>
 
 
-<?php
-/* Si nos ha llegado las cantidades del libro que se quiere comprar entra en el if */
-if (isset($_POST['cantidad'])) {
-    /* Recojo el array asociativo pasado por el formulario, donde la clave del mismo se compone del titulo y el precio del libto 
-      y el valor se corresponde a la cantidad de ese libro que ha selecionado el usuario */
-    $cantidades = $_POST['cantidad'];
+        <?php
+        /* Si nos ha llegado las cantidades del libro que se quiere comprar entra en el if */
+        if (isset($_POST['cantidad'])) {
+            /* Recojo el array asociativo pasado por el formulario, donde la clave del mismo se compone del titulo y el precio del libto 
+              y el valor se corresponde a la cantidad de ese libro que ha selecionado el usuario */
+            $cantidades = $_POST['cantidad'];
 
-    /* Se crea una cesta vacia para obtener la cesta de la variable de sesion */
-    $cesta = new Cesta();
+            /* Se crea una cesta vacia para obtener la cesta de la variable de sesion */
+            $cesta = new Cesta();
 
-    /* Guardamos la cesta en la variable de sesion serializada */
-    $cesta->unserialize($_SESSION['cesta']);
+            /* Guardamos la cesta en la variable de sesion serializada */
+            $cesta->unserialize($_SESSION['cesta']);
 
-    /* Recorremos con el foreach el array devuelto y extraemos las claves y sus valores */
-    foreach ($cantidades as $clave => $cantidad) {
-        /* Si la cantidad del libro es mayor que cero entra en el if y... */
-        if ($cantidad > 0) {
-            /* Divido las claves del array pasado por el form con la funcion explode  para obetener las claves por separado, ya que esta,
-              se encarga de dividir una cadena en subcadenas, le pasamos como primer argumento el delimitador en este caso | y el segundo
-             * argumento es lo que queremos dividir, por lo tanto partesClaves se convierte ahora en un array de dos posiciones */
-            $partesClaves = explode(" | ", $clave);
-
-
-            /* Aqui indicamos que la primera posicion [0] del array creado al dividir la clave, corresponde al titulo del libro y la segunda posicion
-              [1] correspondera al precio del libro, convierto el precio en float para despues realizar el sumatorio del factura  del comprador */
-            $tituloDelLibro = $partesClaves[0];
-            $precioLibro = (float) $partesClaves[1];
-
-            /* Creamos un objeto producto */
-            $producto = new Producto($tituloDelLibro, $precioLibro, $cantidad);
+            /* Recorremos con el foreach el array devuelto y extraemos las claves y sus valores */
+            foreach ($cantidades as $clave => $cantidad) {
+                /* Si la cantidad del libro es mayor que cero entra en el if y... */
+                if ($cantidad > 0) {
+                    /* Divido las claves del array pasado por el form con la funcion explode  para obetener las claves por separado, ya que esta,
+                      se encarga de dividir una cadena en subcadenas, le pasamos como primer argumento el delimitador en este caso | y el segundo
+                     * argumento es lo que queremos dividir, por lo tanto partesClaves se convierte ahora en un array de dos posiciones */
+                    $partesClaves = explode(" | ", $clave);
 
 
-            /* Agregamos los productos a la cesta */
-            $cesta->agregarProducto($producto);
-            
-            
-            //IMPORTANTE A CONTINUACIÓN -> Problema al añadir más cantidades y entre sesiones
-            //Se repiten los libros al hacer pruebas
-            //Solución de chatgpt, hay que revisarla porque hay cosas que se saca de la manga
-            
-            /* Verificar si el producto ya existe en la cesta */
-            //$productoExistente = $cesta->buscarProductoPorTitulo($tituloDelLibro);
+                    /* Aqui indicamos que la primera posicion [0] del array creado al dividir la clave, corresponde al titulo del libro y la segunda posicion
+                      [1] correspondera al precio del libro, convierto el precio en float para despues realizar el sumatorio del factura  del comprador */
+                    $tituloDelLibro = $partesClaves[0];
+                    $precioLibro = (float) $partesClaves[1];
 
-            /* Si el producto ya existe, actualiza la cantidad; de lo contrario, crea un nuevo producto */
-            //if ($productoExistente) {
-            //    $productoExistente->setCantidad($productoExistente->getCantidad() + $cantidad);
-            //} else {
-            //    $producto = new Producto($tituloDelLibro, $precioLibro, $cantidad);
-            //    $cesta->agregarProducto($producto);
-            //}
-             
-            
-        }
-    }
-    ?>
-        <h2>Mi Cesta</h2>
+                    /* Creamos un objeto producto */
+                    $producto = new Producto($tituloDelLibro, $precioLibro, $cantidad);
+
+
+                    /* Agregamos los productos a la cesta */
+                    $cesta->agregarProducto($producto);
+
+
+                    //IMPORTANTE A CONTINUACIÓN -> Problema al añadir más cantidades y entre sesiones
+                    //Se repiten los libros al hacer pruebas
+                    //Solución de chatgpt, hay que revisarla porque hay cosas que se saca de la manga
+
+                    /* Verificar si el producto ya existe en la cesta */
+                    //$productoExistente = $cesta->buscarProductoPorTitulo($tituloDelLibro);
+
+                    /* Si el producto ya existe, actualiza la cantidad; de lo contrario, crea un nuevo producto */
+                    //if ($productoExistente) {
+                    //    $productoExistente->setCantidad($productoExistente->getCantidad() + $cantidad);
+                    //} else {
+                    //    $producto = new Producto($tituloDelLibro, $precioLibro, $cantidad);
+                    //    $cesta->agregarProducto($producto);
+                    //}
+                }
+            }
+            ?>
+            <h2>Mi Cesta</h2>
             <table>
                 <tr>
                     <th>Título</th>
@@ -174,7 +172,7 @@ if (isset($_POST['cantidad'])) {
 
     <?php
     foreach ($cesta->getProductos() as $producto) {
-        
+
         echo "<tr><td>" . $producto->getTitulo() . "</td>";
         echo "<td>" . $producto->getPrecio() . "</td>";
         echo "<td>" . $producto->getCantidad() . "</td></tr>";
@@ -182,8 +180,8 @@ if (isset($_POST['cantidad'])) {
 
     /* Guardamos la cesta en la variable de sesion serializada */
     $_SESSION['cesta'] = $cesta->serialize();
-    }
-    ?>
+}
+?>
         </table>
     </body>
 </html>
