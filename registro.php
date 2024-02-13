@@ -7,17 +7,15 @@ and open the template in the editor.
 <html>
     <head>
         <meta charset="UTF-8">
-        <title></title>
+        <title>Registro</title>
     </head>
     <body>
         <?php
-        /* Conecto con la base de datos */
-        $conexion = mysqli_connect("localhost", "julene", "julene")
-                or die("No se puede conectar con el servidor");
+        /* Inlcuimos la conexion a la BD */
+        include 'conexion.php';
 
-        /* Selecionar la bd */
-        mysqli_select_db($conexion, "tienda")
-                or die("No se puede seleccionar la base de datos");
+        // Obtenemos la conexión utilizando la función getConn() (definida en el php de conexion a la BD)
+        $conexion = getConn();
 
 
         /* Si se ha enviado los datos del formulario, usuario y contraseña del nuevo usuario entra en el if */

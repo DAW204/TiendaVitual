@@ -7,14 +7,13 @@ session_start();
 <html>
     <head>
         <meta charset="UTF-8">
-        <title></title>
+        <title>Menú</title>
     </head>
     <body>
         <?php
         /* Verifico que hay un usuario guardado en la variable de sesion, lo cual me indica si se han logeado, si este es el caso entra en el if
           y se hace la comprobacion del rol para redirigir al usuario a su menu personalizado en funcion de este */
-        if (isset($_SESSION['usuario']))
-        {
+        if (isset($_SESSION['usuario'])) {
             /* Guardamos en usuario_ingresado el usuario de la variable de session */
             $usuario_ingresado = $_SESSION['usuario'];
 
@@ -28,12 +27,11 @@ session_start();
             // $id_usuario = $_SESSION['id_usuario'];
 
 
-            $conexion = mysqli_connect("localhost", "julene", "julene")
-                    or die("No se puede conectar con el servidor");
+            /* Inlcuimos la conexion a la BD */
+            include 'conexion.php';
 
-            /* Selecionar la bd */
-            mysqli_select_db($conexion, "tienda")
-                    or die("No se puede seleccionar la base de datos");
+            // Obtenemos la conexión utilizando la función getConn() (definida en el php de conexion a la BD)
+            $conexion = getConn();
             ?> 
 
             <!-- Mensaje de bienvenida personalizado con el nombre del usuario -->
@@ -57,27 +55,25 @@ session_start();
                 <!--A ESTE MENU SOLO PUEDEN LLEGAR EL COMPRADOR Y EL VENDEDOR, ya que al invitado se le redirige directamente a la unica pantalla que puede ver, en el mismo login -->
 
                 <?php
-                if ($rol == 'vendedor')
-                {
+                if ($rol == 'vendedor') {
                     ?>
 
-                   
-                        <input type="submit" value="verSolicitudes" name="enviar" />
-                    
+
+                    <input type="submit" value="verSolicitudes" name="enviar" />
 
 
 
-                    <?php
-                }
-                if ($rol == 'comprador')
-                {
-                    ?>
+
+        <?php
+    }
+    if ($rol == 'comprador') {
+        ?>
 
                     <input type="submit" value="Comprar" name="enviar" />
 
-                    <?php
-                }
-                ?>
+        <?php
+    }
+    ?>
 
 
 
@@ -93,13 +89,12 @@ session_start();
 
             <hr>  
 
-            <?php
-        } else
-        {
-            /* En caso de que no exista ningun usuario en la variable de sesion indica que nadie se ha logeado por lo tanto le prohibimos el acceso y le ofrecemos 
-              volver al login para que se autentique correctamente para acceder */
-            print "ACCESO NO PERMITIDO";
-            ?>
+    <?php
+} else {
+    /* En caso de que no exista ningun usuario en la variable de sesion indica que nadie se ha logeado por lo tanto le prohibimos el acceso y le ofrecemos 
+      volver al login para que se autentique correctamente para acceder */
+    print "ACCESO NO PERMITIDO";
+    ?>
             <a href="login.php">Volver al Login</a>
 
             <?php

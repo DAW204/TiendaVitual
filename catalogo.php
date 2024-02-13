@@ -8,7 +8,7 @@ and open the template in the editor.
 <html>
     <head>
         <meta charset="UTF-8">
-        <title></title>
+        <title>Catálogo</title>
 
         <style>
 
@@ -57,13 +57,11 @@ and open the template in the editor.
         }
 
 
-        /* Conectamos con la base de datos e imprimos el mensaje correspondiente si no es posible */
-        $conexion = mysqli_connect("localhost", "julene", "julene")
-                or die("No se puede conectar con el servidor");
+        /* Inlcuimos la conexion a la BD */
+        include 'conexion.php';
 
-        /* Selecionar la bd */
-        mysqli_select_db($conexion, "tienda")
-                or die("No se puede seleccionar la base de datos");
+        // Obtenemos la conexión utilizando la función getConn() (definida en el php de conexion a la BD)
+        $conexion = getConn();
 
         $consulta = "select * from libro;";
 
