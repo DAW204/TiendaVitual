@@ -47,6 +47,19 @@ class Cesta implements Serializable
     {
         $this->productos = unserialize($data);
     }
+    
+    /* Método para buscar un libro determinado por título
+     * si encuentra coincidencias dentro del array retorna el producto
+     * si no retorna false */
+    public function buscarProductoPorTitulo($tituloDelLibro) {
+    foreach ($this->productos as $producto) {
+        if ($producto->getTitulo() === $tituloDelLibro) {
+            return $producto;
+        }
+    }
+    return false;
+}
+
 
 }
 

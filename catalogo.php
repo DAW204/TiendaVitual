@@ -25,8 +25,12 @@ and open the template in the editor.
             {
                 border: 2px solid;
                 border-collapse: collapse;
+                
             }
-
+            
+            .checkbox {
+                text-align: center;
+            }
 
             #input {
 
@@ -34,6 +38,8 @@ and open the template in the editor.
                 height: 15px;
                 margin-left: 10px;
             }
+            
+            
         </style>
     </head>
     <body>
@@ -136,28 +142,27 @@ and open the template in the editor.
                     $tituloDelLibro = $partesClaves[0];
                     $precioLibro = (float) $partesClaves[1];
 
-                    /* Creamos un objeto producto */
-                    $producto = new Producto($tituloDelLibro, $precioLibro, $cantidad);
-
-
-                    /* Agregamos los productos a la cesta */
-                    $cesta->agregarProducto($producto);
-
 
                     //IMPORTANTE A CONTINUACIÓN -> Problema al añadir más cantidades y entre sesiones
                     //Se repiten los libros al hacer pruebas
-                    //Solución de chatgpt, hay que revisarla porque hay cosas que se saca de la manga
+                    //SOLUCIONADO!!! EN PRINCIPIO
+                    //Si puedes probar Julene
 
+
+                    /* Con esta solución lo que hariamos sería comprobar primero si en la cesta ya está
+                     * guardado ese título, y si está lo que hará será modificar solo la cantidad */
+                    $productoExistente = $cesta->buscarProductoPorTitulo($tituloDelLibro);
+                    
                     /* Verificar si el producto ya existe en la cesta */
-                    //$productoExistente = $cesta->buscarProductoPorTitulo($tituloDelLibro);
-
-                    /* Si el producto ya existe, actualiza la cantidad; de lo contrario, crea un nuevo producto */
-                    //if ($productoExistente) {
-                    //    $productoExistente->setCantidad($productoExistente->getCantidad() + $cantidad);
-                    //} else {
-                    //    $producto = new Producto($tituloDelLibro, $precioLibro, $cantidad);
-                    //    $cesta->agregarProducto($producto);
-                    //}
+                    if ($productoExistente) {
+                        
+                        // Si el producto ya existe, actualizar la cantidad
+                        $productoExistente->setCantidad($productoExistente->getCantidad() + $cantidad);
+                    } else {
+                        // Si el producto no existe, crear un nuevo producto y agregarlo a la cesta
+                        $producto = new Producto($tituloDelLibro, $precioLibro, $cantidad);
+                        $cesta->agregarProducto($producto);
+                    }
                 }
             }
             ?>
@@ -165,23 +170,25 @@ and open the template in the editor.
             <table>
                 <tr>
                     <th>Título</th>
-                    <th>Precio</th>
+                    <th>Precio Unitario</th>
                     <th>Cantidad</th>
+                    <th>Eliminar</th>
                 </tr>
 
 
-    <?php
-    foreach ($cesta->getProductos() as $producto) {
+                <?php
+                foreach ($cesta->getProductos() as $producto) {
 
-        echo "<tr><td>" . $producto->getTitulo() . "</td>";
-        echo "<td>" . $producto->getPrecio() . "</td>";
-        echo "<td>" . $producto->getCantidad() . "</td></tr>";
-    }
+                    echo "<tr><td>" . $producto->getTitulo() . "</td>";
+                    echo "<td>" . $producto->getPrecio() . "</td>";
+                    echo "<td>" . $producto->getCantidad() . "</td>";
+                    echo '<td class="checkbox"><input type="checkbox" id="miCheckbox" name="miCheckbox" value="valor"/></td></tr>';
+                }
 
-    /* Guardamos la cesta en la variable de sesion serializada */
-    $_SESSION['cesta'] = $cesta->serialize();
-}
-?>
+                /* Guardamos la cesta en la variable de sesion serializada */
+                $_SESSION['cesta'] = $cesta->serialize();
+            }
+            ?>
         </table>
     </body>
 </html>
