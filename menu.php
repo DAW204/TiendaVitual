@@ -11,17 +11,23 @@ session_start();
     </head>
     <body>
         <?php
-        
-        /*Verifico que hay un usuario guardado en la variable de sesion, lo cual me indica si se han logeado, si este es el caso entra en el if
-        y se hace la comprobacion del rol para redirigir al usuario a su menu personalizado en funcion de este */
+        /* Verifico que hay un usuario guardado en la variable de sesion, lo cual me indica si se han logeado, si este es el caso entra en el if
+          y se hace la comprobacion del rol para redirigir al usuario a su menu personalizado en funcion de este */
         if (isset($_SESSION['usuario']))
         {
-            
+            /* Guardamos en usuario_ingresado el usuario de la variable de session */
             $usuario_ingresado = $_SESSION['usuario'];
+
+            /* Recogemos tambien su rol, necesario para saber que mostrar a cada uno */
             $rol = $_SESSION['rol'];
+
+            /* Recojemos su nombre tambien, para mostrarle un mensaje personalizado */
             $nombreUsuario = $_SESSION['nombreUsuario'];
-            
-            
+
+            /* Por ultimo recojemos su id de usuario */
+            // $id_usuario = $_SESSION['id_usuario'];
+
+
             $conexion = mysqli_connect("localhost", "julene", "julene")
                     or die("No se puede conectar con el servidor");
 
@@ -34,37 +40,40 @@ session_start();
             <h1>Menu </h1>
             <hr>
             <?php
-            /*Mensaje de bienvenida en funcion del usuario que sea usando la variable de sesion*/
-            print "Bienvenido usuario: " .$nombreUsuario;
+            /* Mensaje de bienvenida en funcion del usuario que sea usando la variable de sesion */
+            print "Bienvenido usuario: " . $nombreUsuario;
             ?>
             <br><br>
-            
+
             <!-- Formulario que alberga los diferentes botones que se mostraran en funcion del rol que posea el ususario-->
-            <form name="form" action="general.php" method="POST" enctype="multipart/form-data">
+            <form name="form" action="gestionMenu.php" method="POST" enctype="multipart/form-data">
 
 
-                <!-- En funcion del rol que tenga el usuario podra hacer diferentes cosas el 1(Profesores), 2 alumnos y el 3 administradores
-                quienes podran realizar todas la funcionalidades, mediante el link les lleva al correspondiente php-->
-                
-                <!--Los administradores podran consultar,insertar y eliminar, los profesores(1) podran Consultar e insertar, y los alumnos solo podran Consultar-->
+                <!-- En funcion del rol que tenga el usuario podra hacer diferentes cosas:
+                -VENDEDOR: podra > *ver estado de las cestas, podra cambiar el estado del pedido a enviado y cambiar el rol al invitado
+                -COMPRADOR: podra > comprar productos(poner y quitarlos de la cesta), cerrar pedido,ver estado de su compra(enviado...),ver historial de compras,¿pagar?
+                -INVITADO: podra > SOLO VER PRODUCTOS Y SOLICITAR CAMBIO-->
 
-                <input type="submit" value="Consultar" name="enviar" />
+                <!--A ESTE MENU SOLO PUEDEN LLEGAR EL COMPRADOR Y EL VENDEDOR, ya que al invitado se le redirige directamente a la unica pantalla que puede ver, en el mismo login -->
 
                 <?php
-                if ($rol == 3)
+                if ($rol == 'vendedor')
                 {
                     ?>
 
-                    <input type="submit" value="Eliminar" name="enviar" />
+                   
+                        <input type="submit" value="verSolicitudes" name="enviar" />
+                    
+
 
 
                     <?php
                 }
-                if ($rol == 3 || $rol == 1)
+                if ($rol == 'comprador')
                 {
                     ?>
 
-                    <input type="submit" value="Insertar" name="enviar" />
+                    <input type="submit" value="Comprar" name="enviar" />
 
                     <?php
                 }
@@ -74,21 +83,21 @@ session_start();
 
 
             </form>
-            
+
             <!-- Formulario con un boton para salir comun a todos los usuarios, al pulsarlo se redirige al login y se cierra la sesion(Gestionado en el login el cierre de sesion) -->
             <form name="form" action="login.php" method="POST" enctype="multipart/form-data">
-                
+
                 <input type="submit" value="salir" name="salir" />
-                
+
             </form>
-            
+
             <hr>  
 
             <?php
-        }else
+        } else
         {
-            /*En caso de que no exista ningun usuario en la variable de sesion indica que nadie se ha logeado por lo tanto le prohibimos el acceso y le ofrecemos 
-            volver al login para que se autentique correctamente para acceder*/
+            /* En caso de que no exista ningun usuario en la variable de sesion indica que nadie se ha logeado por lo tanto le prohibimos el acceso y le ofrecemos 
+              volver al login para que se autentique correctamente para acceder */
             print "ACCESO NO PERMITIDO";
             ?>
             <a href="login.php">Volver al Login</a>

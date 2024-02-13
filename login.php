@@ -57,7 +57,7 @@
              
              
             /* Consulta SQL para verificar usuario y contraseña introducido*/
-            $consulta = "SELECT * FROM usuario WHERE usuario = '$usuario_ingresado' AND contrasena = '$contrasena_ingresada'";
+            $consulta = "SELECT nombre,id_usuario,rol FROM usuario WHERE usuario = '$usuario_ingresado' AND contrasena = '$contrasena_ingresada'";
             
             $consulta = mysqli_query($conexion, $consulta)
                     or die ("Fallo en la consulta");
@@ -78,11 +78,21 @@
                 $_SESSION['usuario'] = $usuario_ingresado;
                 print $_SESSION['usuario'];
                  
-                 
                 /*Guardo el nombre del usuario para mostrarle un mensaje de bienvenido*/
                 $_SESSION['nombreUsuario'] = $datosConsulta['nombre'];
                 
-                /*Al comprobar el rol y que todo ha ido bien lleva al menu*/
+                /*Guardo en variable de sesion el id del usuario para usarlo mas tarde*/
+                $_SESSION['id_usuario']= $datosConsulta['id_usuario'];
+                
+                /*Si el usuario que se logea tiene como rol invitado, solo le redirigira a previsualizacion donde podra solo observar los productos*/
+                if($_SESSION['rol'] == 'invitado')
+                {
+                    
+                     header('Location: previsualizacion.php');
+                     exit;
+                    
+                }
+                /*En caso de que el rol del usuario sea comprador/vendedor accedera al menu normal*/
                 header('Location: menu.php');
                 
                  exit;
