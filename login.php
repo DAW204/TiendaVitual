@@ -71,13 +71,10 @@
              {
                 /*Obtengo el rol (invitado,registrado....) de la consulta realizada*/
                 $_SESSION['rol']= $datosConsulta['rol'];
-                 
-                print $_SESSION['rol'];
-                 
+              
                 // Credenciales válidas, iniciar sesión
                 $_SESSION['usuario'] = $usuario_ingresado;
-                print $_SESSION['usuario'];
-                 
+                
                 /*Guardo el nombre del usuario para mostrarle un mensaje de bienvenido*/
                 $_SESSION['nombreUsuario'] = $datosConsulta['nombre'];
                 
@@ -88,8 +85,8 @@
                 if($_SESSION['rol'] == 'invitado')
                 {
                     
-                     header('Location: previsualizacion.php');
-                     exit;
+                    header('Location: previsualizacion.php');
+                    exit;
                     
                 }
                 /*En caso de que el rol del usuario sea comprador/vendedor accedera al menu normal*/

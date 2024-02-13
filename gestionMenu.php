@@ -43,16 +43,12 @@ and open the template in the editor.
 
 
                     /* Realizamos un select para que el vendedor pueda ver todos los usuarios que han solicitado el cambio de rol */
-                    $consulta = " select * from solicitudes;"; //AQUI DESPUES AÑADIR UN WHERE PARA SACAR SOLO LOS QUE ESTAN PENDIENTES
+                    $consulta = " select * from solicitudes WHERE estado='pendiente';"; //AQUI DESPUES AÑADIR UN WHERE PARA SACAR SOLO LOS QUE ESTAN PENDIENTES
 
                     $consulta = mysqli_query($conexion, $consulta)
                             or die("Fallo en la consulta");
                     ?>
                     <form action="gestionMenu.php" method="POST">
-
-
-
-
 
                         <?php
                         /* Consulta si hay usuarios pendientes */
@@ -67,8 +63,8 @@ and open the template in the editor.
                                 $fecha = $row['fecha'];
 
                                 // Muestra el ID en el valor del checkbox y los demás campos como texto en una etiqueta <label>
-                                echo "<input type='checkbox' name='opciones[]' value='$id_solicitud'> 
-                            <label>ID solicitud: $id_solicitud, ID usuario: $nombre_opcion, Estado: $estado, Fecha: $fecha</label> <br>";
+                                echo "<input type='checkbox' name='opciones[]' value='$nombre_opcion'> 
+                                <label>ID solicitud: $id_solicitud, ID usuario: $nombre_opcion, Estado: $estado, Fecha: $fecha</label> <br>";
                             }
                         } else
                         {
@@ -86,14 +82,23 @@ and open the template in the editor.
                     {
                         if (isset($_POST['opciones']))
                         {
+                            
                             // Recolecta todas las opciones seleccionadas
                             $opciones_seleccionadas = $_POST['opciones'];
-
+                            
                             // Itera sobre las opciones seleccionadas
                             foreach ($opciones_seleccionadas as $opcion)
                             {
                                 // $opcion contiene el valor (ID) del checkbox seleccionado
-                                echo "Opción seleccionada: $opcion <br>";
+                               // echo "Opción seleccionada: $opcion <br>";
+                               
+                                //AQUI REALIZAR LA CONSULTA DE MODIFICAR TABLA USUARIOS/ROL EN FUNCION DEL ID QUE SEA IDENTICO AL DE LA TABLA 
+
+                                $consulta = " UPDATE usuario SET rol='comprador' WHERE id_usuario='$opcion';"; //AQUI DESPUES AÑADIR UN WHERE PARA SACAR SOLO LOS QUE ESTAN PENDIENTES
+
+                                $consulta = mysqli_query($conexion, $consulta)
+                                      or die("Fallo en la consulta");
+                                
                             }
                         } else
                         {

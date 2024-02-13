@@ -43,7 +43,7 @@ and open the template in the editor.
             $consulta = mysqli_query($conexion, $consulta)
                     or die("Fallo en la consulta");
 //            
-//            
+//           
 //            /*MIRAR EN OTRO MOMENTO*/
 //            if ($consulta)
 //            {
