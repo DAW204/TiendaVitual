@@ -199,7 +199,10 @@ and open the template in the editor.
         if (isset($_POST['borrado'])){
             $listaBorrado = $_POST['borrado'];
            
-        /* He buscado en chatgpt y con unset se elimina una posicion x del array
+        /* Me genera la duda con el serializable
+         * 
+         * 
+         * He buscado en chatgpt y con unset se elimina una posicion x del array
          * Ejemplo: unset($array[1]);
          * Además, hay una función en php llamada array_values() que permite
          * reindexar el array una vez que hayas borrado una posición de él
