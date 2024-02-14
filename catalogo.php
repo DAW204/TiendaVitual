@@ -25,9 +25,9 @@ and open the template in the editor.
             {
                 border: 2px solid;
                 border-collapse: collapse;
-                
+
             }
-            
+
             .checkbox {
                 text-align: center;
             }
@@ -38,8 +38,8 @@ and open the template in the editor.
                 height: 15px;
                 margin-left: 10px;
             }
-            
-            
+
+
         </style>
     </head>
     <body>
@@ -152,10 +152,10 @@ and open the template in the editor.
                     /* Con esta solución lo que hariamos sería comprobar primero si en la cesta ya está
                      * guardado ese título, y si está lo que hará será modificar solo la cantidad */
                     $productoExistente = $cesta->buscarProductoPorTitulo($tituloDelLibro);
-                    
+
                     /* Verificar si el producto ya existe en la cesta */
                     if ($productoExistente) {
-                        
+
                         // Si el producto ya existe, actualizar la cantidad
                         $productoExistente->setCantidad($productoExistente->getCantidad() + $cantidad);
                     } else {
@@ -167,28 +167,53 @@ and open the template in the editor.
             }
             ?>
             <h2>Mi Cesta</h2>
-            <table>
-                <tr>
-                    <th>Título</th>
-                    <th>Precio Unitario</th>
-                    <th>Cantidad</th>
-                    <th>Eliminar</th>
-                </tr>
+            <form name="borrar" action="catalogo.php" method="POST">
+                <table>
+                    <tr>
+                        <th>Título</th>
+                        <th>Precio Unitario</th>
+                        <th>Cantidad</th>
+                        <th>Eliminar</th>
+                    </tr>
 
 
-                <?php
-                foreach ($cesta->getProductos() as $producto) {
+                    <?php
+                    foreach ($cesta->getProductos() as $producto) {
 
-                    echo "<tr><td>" . $producto->getTitulo() . "</td>";
-                    echo "<td>" . $producto->getPrecio() . "</td>";
-                    echo "<td>" . $producto->getCantidad() . "</td>";
-                    echo '<td class="checkbox"><input type="checkbox" id="miCheckbox" name="miCheckbox" value="valor"/></td></tr>';
-                }
+                        echo "<tr><td>" . $producto->getTitulo() . "</td>";
+                        echo "<td>" . $producto->getPrecio() . "</td>";
+                        echo "<td>" . $producto->getCantidad() . "</td>";
+                        echo '<td class="checkbox"><input type="checkbox" id="miCheckbox" name="borrado[' . $producto->getTitulo() . ']" value="valor"/></td></tr>';
+                    }
 
-                /* Guardamos la cesta en la variable de sesion serializada */
-                $_SESSION['cesta'] = $cesta->serialize();
-            }
-            ?>
-        </table>
+                    /* Guardamos la cesta en la variable de sesion serializada */
+                    $_SESSION['cesta'] = $cesta->serialize();
+                
+                ?>
+            </table>
+            <br><br>
+            <input type="submit" value="eliminar" name="eliminar"/>
+        </form>
+        <?php
+        }
+        if (isset($_POST['borrado'])){
+            $listaBorrado = $_POST['borrado'];
+           
+        /* He buscado en chatgpt y con unset se elimina una posicion x del array
+         * Ejemplo: unset($array[1]);
+         * Además, hay una función en php llamada array_values() que permite
+         * reindexar el array una vez que hayas borrado una posición de él
+         * si tenias:
+         * 0 => platano
+         * 1 => manzana
+         * 2 => cereza
+         * Y decides borrar el 1:manzana, te quedaría 0:platano y 2:cereza, pero
+         * con la funcion cambias los indices para que vuelvan a ser correlativos
+         * 0 => platano y 1 => cereza
+         * me parecio interesante pero tengo que edarle una vuelta
+         */
+
+        }
+        ?>
     </body>
 </html>
