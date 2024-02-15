@@ -108,11 +108,10 @@ and open the template in the editor.
 
             </table>
 
-            <br><br>
+            <br>
             <input type="submit" value="Añadir a la cesta" name="enviar" />
 
-        </form><br>
-
+        </form>
 
         <?php
         /* Si nos ha llegado las cantidades del libro que se quiere comprar entra en el if */
@@ -190,9 +189,17 @@ and open the template in the editor.
                     $_SESSION['cesta'] = $cesta->serialize();
                     ?>
                 </table>
-                <br><br>
-                <input type="submit" value="eliminar" name="eliminar"/>
+                <br>
+                <input type="submit" value="Eliminar" name="eliminar"/>
+            </form><br>
+
+            <!-- Botón para ir a la página de zona de pago -->
+            <form action="zonaPago.php" method="GET">
+
+                <input type="submit" value="Ir a la zona de pago" />
+
             </form>
+
             <?php
         }
         if (isset($_POST['borrado'])) {
