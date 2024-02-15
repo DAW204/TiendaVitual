@@ -109,7 +109,7 @@ and open the template in the editor.
             </table>
 
             <br><br>
-            <input type="submit" value="comprar" name="enviar" />
+            <input type="submit" value="Añadir a la cesta" name="enviar" />
 
         </form><br>
 
@@ -147,7 +147,6 @@ and open the template in the editor.
                     //Se repiten los libros al hacer pruebas
                     //SOLUCIONADO!!! EN PRINCIPIO
                     //Si puedes probar Julene
-
 
                     /* Con esta solución lo que hariamos sería comprobar primero si en la cesta ya está
                      * guardado ese título, y si está lo que hará será modificar solo la cantidad */

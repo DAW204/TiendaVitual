@@ -13,7 +13,8 @@ session_start();
         <?php
         /* Verifico que hay un usuario guardado en la variable de sesion, lo cual me indica si se han logeado, si este es el caso entra en el if
           y se hace la comprobacion del rol para redirigir al usuario a su menu personalizado en funcion de este */
-        if (isset($_SESSION['usuario'])) {
+        if (isset($_SESSION['usuario']))
+        {
             /* Guardamos en usuario_ingresado el usuario de la variable de session */
             $usuario_ingresado = $_SESSION['usuario'];
 
@@ -55,7 +56,8 @@ session_start();
                 <!--A ESTE MENU SOLO PUEDEN LLEGAR EL COMPRADOR Y EL VENDEDOR, ya que al invitado se le redirige directamente a la unica pantalla que puede ver, en el mismo login -->
 
                 <?php
-                if ($rol == 'vendedor') {
+                if ($rol == 'vendedor')
+                {
                     ?>
 
 
@@ -64,12 +66,14 @@ session_start();
 
 
 
-        <?php
-    }
-    if ($rol == 'comprador') {
-        ?>
+                    <?php
+                }
+                if ($rol == 'comprador')
+                {
+                    ?>
 
                     <input type="submit" value="Comprar" name="enviar" />
+                    <input type="submit" value="EstadoPedido" name="enviar" />
 
         <?php
     }
@@ -89,17 +93,18 @@ session_start();
 
             <hr>  
 
-    <?php
-} else {
-    /* En caso de que no exista ningun usuario en la variable de sesion indica que nadie se ha logeado por lo tanto le prohibimos el acceso y le ofrecemos 
-      volver al login para que se autentique correctamente para acceder */
-    print "ACCESO NO PERMITIDO";
-    ?>
+            <?php
+        } else
+        {
+            /* En caso de que no exista ningun usuario en la variable de sesion indica que nadie se ha logeado por lo tanto le prohibimos el acceso y le ofrecemos 
+              volver al login para que se autentique correctamente para acceder */
+            print "ACCESO NO PERMITIDO";
+            ?>
             <a href="login.php">Volver al Login</a>
 
-            <?php
-        }
-        ?>
+    <?php
+}
+?>
 
     </body>
 </html>

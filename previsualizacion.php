@@ -23,7 +23,7 @@ and open the template in the editor.
             {
                 border: 2px solid;
                 border-collapse: collapse;
-                
+
             }
 
             input {
@@ -57,7 +57,8 @@ and open the template in the editor.
             </tr>
 
             <?php
-            while ($row = mysqli_fetch_assoc($resultado)) {
+            while ($row = mysqli_fetch_assoc($resultado))
+            {
                 ?>
 
                 <tr>
@@ -68,7 +69,7 @@ and open the template in the editor.
                 </tr>
 
 
-        <?php } ?>
+<?php } ?>
 
         </table>
 
@@ -78,18 +79,19 @@ and open the template in the editor.
         </form>
 
 
-<?php
-/* Recojemos el id del usuario de la variable de sesion */
-$id_usuario = $_SESSION['id_usuario'];
+        <?php
+        /* Recojemos el id del usuario de la variable de sesion */
+        $id_usuario = $_SESSION['id_usuario'];
 
-/* Si el usuario invitado pulsa solicitar, entra en el if y se realiza un insert en la tabla de solicitudes, donde quedara 
-  su peticion de cambio de rol registrada con el estado en pendiente para que despues el vendedor efectue el cambio a comprador */
-if (isset($_POST['solicitar'])) {
+        /* Si el usuario invitado pulsa solicitar, entra en el if y se realiza un insert en la tabla de solicitudes, donde quedara 
+          su peticion de cambio de rol registrada con el estado en pendiente para que despues el vendedor efectue el cambio a comprador */
+        if (isset($_POST['solicitar']))
+        {
 
-    $consulta = "INSERT INTO solicitudes (id_usuario) VALUES ($id_usuario);";
+            $consulta = "INSERT INTO solicitudes (id_usuario) VALUES ($id_usuario);";
 
-    $consulta = mysqli_query($conexion, $consulta)
-            or die("Fallo en la consulta");
+            $consulta = mysqli_query($conexion, $consulta)
+                    or die("Fallo en la consulta");
 //            
 //           
 //            /*MIRAR EN OTRO MOMENTO*/
@@ -102,16 +104,17 @@ if (isset($_POST['solicitar'])) {
 //            {
 //                die("Fallo en la consulta: " . mysqli_error($conexion));
 //            }
-}
+        }
 
 
-/* Si el usuario invitado pulsa el boton para cambiar de rol le redirigira al login */
-if (isset($_POST['volver'])) {
+        /* Si el usuario invitado pulsa el boton para cambiar de rol le redirigira al login */
+        if (isset($_POST['volver']))
+        {
 
-    /* Redirigimos a la página especificada, en este caso el login */
-    header("Location: login.php");
-    exit;
-}
-?>
+            /* Redirigimos a la página especificada, en este caso el login */
+            header("Location: login.php");
+            exit;
+        }
+        ?>
     </body>
 </html>
