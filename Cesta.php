@@ -54,6 +54,11 @@ class Cesta implements Serializable {
         return false;
     }
 
+    // Método para reindexar los productos
+    public function reindexar() {
+        $this->productos = array_values($this->productos);
+    }
+
 }
 
 ?>
