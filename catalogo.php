@@ -182,39 +182,37 @@ and open the template in the editor.
                         echo "<tr><td>" . $producto->getTitulo() . "</td>";
                         echo "<td>" . $producto->getPrecio() . "</td>";
                         echo "<td>" . $producto->getCantidad() . "</td>";
-                        echo '<td class="checkbox"><input type="checkbox" id="miCheckbox" name="borrado[' . $producto->getTitulo() . ']" value="valor"/></td></tr>';
+                        echo '<td class="checkbox"><input type="checkbox" id="miCheckbox" name="borrado[' . $producto->getTitulo() . ']" value="' . $producto->getTitulo() . '"/></td></tr>';
                     }
 
+                    //Lo pongo aqui o lo gestiono mas abajo
                     /* Guardamos la cesta en la variable de sesion serializada */
-                    $_SESSION['cesta'] = $cesta->serialize();
-                
-                ?>
-            </table>
-            <br><br>
-            <input type="submit" value="eliminar" name="eliminar"/>
-        </form>
-        <?php
+                    //$_SESSION['cesta'] = $cesta->serialize();
+                    ?>
+                </table>
+                <br><br>
+                <input type="submit" value="eliminar" name="eliminar"/>
+            </form>
+            <?php
         }
-        if (isset($_POST['borrado'])){
+        if (isset($_POST['borrado'])) {
             $listaBorrado = $_POST['borrado'];
-           
-        /* Me genera la duda con el serializable
-         * 
-         * 
-         * He buscado en chatgpt y con unset se elimina una posicion x del array
-         * Ejemplo: unset($array[1]);
-         * Además, hay una función en php llamada array_values() que permite
-         * reindexar el array una vez que hayas borrado una posición de él
-         * si tenias:
-         * 0 => platano
-         * 1 => manzana
-         * 2 => cereza
-         * Y decides borrar el 1:manzana, te quedaría 0:platano y 2:cereza, pero
-         * con la funcion cambias los indices para que vuelvan a ser correlativos
-         * 0 => platano y 1 => cereza
-         * me parecio interesante pero tengo que edarle una vuelta
-         */
+            // Iterar sobre las claves del array $listaBorrado
+            foreach ($listaBorrado as $titulo => $valor) {
+                // Buscar el índice del producto en la cesta por el título
+                $indiceProductoABorrar = array_search($titulo, array_column($cesta, 'titulo'));
 
+                // Verificar si se encontró un índice válido
+                if ($indiceProductoABorrar !== false) {
+                    // Eliminar el producto de la cesta utilizando unset
+                    unset($cesta[$indiceProductoABorrar]);
+                    // Reindexar el array de la cesta
+                    $cesta = array_values($cesta);
+                }
+            }
+            
+            //me falta serializar, condicionado por si se han producido cambios y modificaciones en la cesta solo
+            //añadir boton para redirigir despues a zona pago?
         }
         ?>
     </body>
