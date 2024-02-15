@@ -187,7 +187,7 @@ and open the template in the editor.
 
                     //Lo pongo aqui o lo gestiono mas abajo
                     /* Guardamos la cesta en la variable de sesion serializada */
-                    //$_SESSION['cesta'] = $cesta->serialize();
+                    $_SESSION['cesta'] = $cesta->serialize();
                     ?>
                 </table>
                 <br><br>
@@ -196,22 +196,32 @@ and open the template in the editor.
             <?php
         }
         if (isset($_POST['borrado'])) {
+            /**/
             $listaBorrado = $_POST['borrado'];
-            // Iterar sobre las claves del array $listaBorrado
-            foreach ($listaBorrado as $titulo => $valor) {
-                // Buscar el índice del producto en la cesta por el título
-                $indiceProductoABorrar = array_search($titulo, array_column($cesta, 'titulo'));
 
-                // Verificar si se encontró un índice válido
-                if ($indiceProductoABorrar !== false) {
-                    // Eliminar el producto de la cesta utilizando unset
-                    unset($cesta[$indiceProductoABorrar]);
-                    // Reindexar el array de la cesta
-                    $cesta = array_values($cesta);
-                }
-            }
-            
-            //me falta serializar, condicionado por si se han producido cambios y modificaciones en la cesta solo
+            /* Se crea una cesta vacia para obtener la cesta de la variable de sesion */
+            $cesta = new Cesta();
+
+            /* Guardamos la cesta en la variable de sesion serializada */
+            $cesta->unserialize($_SESSION['cesta']);
+
+            // Iteramos sobre los productos a eliminar
+//            foreach ($listaBorrado as $titulo => $valor) {
+//                // Buscamos el índice del producto en la cesta por el título
+//                $productoExistente = $cesta->buscarProductoPorTitulo($titulo);
+//
+//                // Verificamos si el producto existe en la cesta
+//                if ($productoExistente) {
+//                    // Eliminamos el producto de la cesta
+//                    $indiceProductoABorrar = array_search($productoExistente, $cesta->getProductos());
+//                    unset($cesta->getProductos()[$indiceProductoABorrar]);
+//                }
+//            }
+            // Reindexar los productos después de eliminar todos los productos deseados
+            $cesta->reindexar();
+            /* Guardamos la cesta en la variable de sesion serializada */
+            $_SESSION['cesta'] = $cesta->serialize();
+
             //añadir boton para redirigir despues a zona pago?
         }
         ?>
