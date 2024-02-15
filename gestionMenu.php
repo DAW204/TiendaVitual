@@ -31,8 +31,20 @@ and open the template in the editor.
     </head>
     <body>
 
-
         <?php
+        
+        /* IMPORTANTEEEEEE
+         * !!!!!!!!PARA JULENE RECORDATORIO DE PARTE DE ESTHER¡¡¡¡¡¡¡¡¡¡¡¡¡¡
+         * 
+         * Tienes que hacer una select condicionada para poder ver a parte de
+         * cada pedido por estado que los puedas ver todos a las vez 
+         * 
+         * Además, tienes que sustituir la parte del condicional (del where) en la select que has
+         * hecho para que sea el id de usuario recogido en la variable de sesion
+         * 
+         */
+        
+        
         session_start();
 
         /* Inlcuimos la conexion a la BD */
