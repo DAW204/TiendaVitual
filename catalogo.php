@@ -211,6 +211,8 @@ and open the template in the editor.
 
             /* Guardamos la cesta en la variable de sesion serializada */
             $cesta->unserialize($_SESSION['cesta']);
+            
+            /*CONTINUAMOS PARA BINGO... GRACIAS POR SU PARTICIPACIÓN*/
 
             // Iteramos sobre los productos a eliminar
 //            foreach ($listaBorrado as $titulo => $valor) {
