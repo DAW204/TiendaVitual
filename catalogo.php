@@ -4,7 +4,50 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
+<?php
+function imprimirCestaBorrar($cesta) {
+    ?>
 
+
+    <h2>Mi Cesta</h2>
+    <form name="borrar" action="catalogo.php" method="POST">
+        <table>
+            <tr>
+                <th>Título</th>
+                <th>Precio Unitario</th>
+                <th>Cantidad</th>
+                <th>Eliminar</th>
+            </tr>
+
+
+            <?php
+            foreach ($cesta->getProductos() as $producto) {
+
+                echo "<tr><td>" . $producto->getTitulo() . "</td>"; //name="borrado[' . $producto->getTitulo() . ']"
+                echo "<td>" . $producto->getPrecio() . "</td>";
+                echo "<td>" . $producto->getCantidad() . "</td>";
+                echo '<td class="checkbox"><input type="checkbox" id="miCheckbox" name="borrado[' . $producto->getTitulo() . ']" value="' . htmlspecialchars($producto->getTitulo()) . '"/></td></tr>';
+            }
+
+            //Lo pongo aqui o lo gestiono mas abajo
+            /* Guardamos la cesta en la variable de sesion serializada */
+            $_SESSION['cesta'] = $cesta->serialize();
+            ?>
+        </table>
+        <br>
+        <input type="submit" value="Eliminar" name="eliminar"/>
+    </form><br>
+
+    <!-- Botón para ir a la página de zona de pago -->
+    <form action="zonaPago.php" method="GET">
+
+        <input type="submit" value="Ir a la zona de pago" />
+
+    </form>
+
+    <?php
+}
+?>
 <html>
     <head>
         <meta charset="UTF-8">
@@ -72,8 +115,7 @@ and open the template in the editor.
 
         $consulta = mysqli_query($conexion, $consulta)
                 or die("Fallo en la consulta");
-
-
+        
         /* Sacamos la fila */
         //$datosConsulta = mysqli_fetch_assoc($consulta);
         ?>
@@ -112,7 +154,7 @@ and open the template in the editor.
             <input type="submit" value="Añadir a la cesta" name="enviar" />
 
         </form>
-
+       
         <?php
         /* Si nos ha llegado las cantidades del libro que se quiere comprar entra en el if */
         if (isset($_POST['cantidad'])) {
@@ -135,17 +177,11 @@ and open the template in the editor.
                      * argumento es lo que queremos dividir, por lo tanto partesClaves se convierte ahora en un array de dos posiciones */
                     $partesClaves = explode(" | ", $clave);
 
-
                     /* Aqui indicamos que la primera posicion [0] del array creado al dividir la clave, corresponde al titulo del libro y la segunda posicion
                       [1] correspondera al precio del libro, convierto el precio en float para despues realizar el sumatorio del factura  del comprador */
                     $tituloDelLibro = $partesClaves[0];
                     $precioLibro = (float) $partesClaves[1];
 
-
-                    //IMPORTANTE A CONTINUACIÓN -> Problema al añadir más cantidades y entre sesiones
-                    //Se repiten los libros al hacer pruebas
-                    //SOLUCIONADO!!! EN PRINCIPIO
-                    //Si puedes probar Julene
 
                     /* Con esta solución lo que hariamos sería comprobar primero si en la cesta ya está
                      * guardado ese título, y si está lo que hará será modificar solo la cantidad */
@@ -163,75 +199,39 @@ and open the template in the editor.
                     }
                 }
             }
-            ?>
-            <h2>Mi Cesta</h2>
-            <form name="borrar" action="catalogo.php" method="POST">
-                <table>
-                    <tr>
-                        <th>Título</th>
-                        <th>Precio Unitario</th>
-                        <th>Cantidad</th>
-                        <th>Eliminar</th>
-                    </tr>
-
-
-                    <?php
-                    foreach ($cesta->getProductos() as $producto) {
-
-                        echo "<tr><td>" . $producto->getTitulo() . "</td>";
-                        echo "<td>" . $producto->getPrecio() . "</td>";
-                        echo "<td>" . $producto->getCantidad() . "</td>";
-                        echo '<td class="checkbox"><input type="checkbox" id="miCheckbox" name="borrado[' . $producto->getTitulo() . ']" value="' . $producto->getTitulo() . '"/></td></tr>';
-                    }
-
-                    //Lo pongo aqui o lo gestiono mas abajo
-                    /* Guardamos la cesta en la variable de sesion serializada */
-                    $_SESSION['cesta'] = $cesta->serialize();
-                    ?>
-                </table>
-                <br>
-                <input type="submit" value="Eliminar" name="eliminar"/>
-            </form><br>
-
-            <!-- Botón para ir a la página de zona de pago -->
-            <form action="zonaPago.php" method="GET">
-
-                <input type="submit" value="Ir a la zona de pago" />
-
-            </form>
-
-            <?php
+            imprimirCestaBorrar($cesta);
         }
         if (isset($_POST['borrado'])) {
-            /**/
-            $listaBorrado = $_POST['borrado'];
+            // Obtener los títulos de los productos marcados para eliminar
+            $titulosMarcados = array_keys($_POST['borrado']);
 
-            /* Se crea una cesta vacia para obtener la cesta de la variable de sesion */
+            /* Se crea una cesta vacía para obtener la cesta de la variable de sesión */
             $cesta = new Cesta();
 
-            /* Guardamos la cesta en la variable de sesion serializada */
+            /* Guardamos la cesta en la variable de sesión serializada */
             $cesta->unserialize($_SESSION['cesta']);
-            
-            /*CONTINUAMOS PARA BINGO... GRACIAS POR SU PARTICIPACIÓN*/
-
-            // Iteramos sobre los productos a eliminar
-//            foreach ($listaBorrado as $titulo => $valor) {
-//                // Buscamos el índice del producto en la cesta por el título
-//                $productoExistente = $cesta->buscarProductoPorTitulo($titulo);
-//
-//                // Verificamos si el producto existe en la cesta
-//                if ($productoExistente) {
-//                    // Eliminamos el producto de la cesta
-//                    $indiceProductoABorrar = array_search($productoExistente, $cesta->getProductos());
-//                    unset($cesta->getProductos()[$indiceProductoABorrar]);
-//                }
-//            }
-            // Reindexar los productos después de eliminar todos los productos deseados
-            $cesta->reindexar();
-            /* Guardamos la cesta en la variable de sesion serializada */
+            // Recorrer la cesta para eliminar los productos marcados
+            foreach ($cesta->getProductos() as $indice => $producto) {
+                $tituloProducto = $producto->getTitulo();
+                // Iterar sobre todos los elementos de $titulosMarcados
+                foreach ($titulosMarcados as $tituloMarcado) {
+                    if ($tituloProducto == $tituloMarcado) {
+                        
+                        // Eliminar el producto que coincide con el título
+                        $cesta->eliminarProducto($indice);
+                        
+                        //Reindexamos indices de cesta para no dejar huecos despues del borrado
+                        $cesta->reindexar();
+                        // No es necesario seguir iterando, ya encontramos una coincidencia
+                        break;
+                    }
+                }
+            }
+            // Actualizar la variable de sesión con la cesta modificada
             $_SESSION['cesta'] = $cesta->serialize();
 
-            //añadir boton para redirigir despues a zona pago?
+            // Mostrar la cesta actualizada
+            imprimirCestaBorrar($cesta);
         }
         ?>
     </body>
