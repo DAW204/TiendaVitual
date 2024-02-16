@@ -41,23 +41,6 @@ and open the template in the editor.
         require_once './Cesta.php';
         require_once './Producto.php';
 
-        /* Creo productos de prueba */
-        $producto1 = new Producto("furia", 26, 5);
-        $producto2 = new Producto("Principito", 54, 3);
-        $producto3 = new Producto("Alas de sangre", 11, 3);
-
-        /* Creo una cesta de prueba */
-
-        $cestaPrueba = new Cesta();
-
-        $cestaPrueba->agregarProducto($producto1);
-        $cestaPrueba->agregarProducto($producto2);
-        $cestaPrueba->agregarProducto($producto3);
-
-
-        $_SESSION['cesta'] = $cestaPrueba->serialize();
-        $_SESSION['id_usuario'] = 3;
-
         /* DE AQUI PARA ARRIBA LO VAMOS A BORRAR CUANDO EL ELIMINAR ESTE COMPLETAMENTE IMPLEMENTADO Y EL BOTON DE CONTINUAR */
         $cesta = new Cesta();
         $cesta->unserialize($_SESSION['cesta']);
