@@ -54,7 +54,9 @@ class Cesta implements Serializable {
         return false;
     }
 
-    // Método para reindexar los productos
+    // Método para reindexar los productos que permite eliminar los 
+    // huecos despues de un borrado en el array y que se reorganicen 
+    // sus ínidices
     public function reindexar() {
         $this->productos = array_values($this->productos);
     }
