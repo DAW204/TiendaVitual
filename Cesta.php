@@ -60,6 +60,13 @@ class Cesta implements Serializable {
     public function reindexar() {
         $this->productos = array_values($this->productos);
     }
+    
+    /* Método para eliminar un producto de la cesta */
+    public function eliminarProducto($indice){
+        if(isset($this->productos[$indice])){
+            unset($this->productos[$indice]);
+        }
+    }
 
 }
 
