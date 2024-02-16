@@ -62,7 +62,7 @@ session_start();
 
 
                     <input type="submit" value="verSolicitudes" name="enviar" />
-
+                    <input type="submit" value="CambiarEstados" name="enviar" />
 
 
 
