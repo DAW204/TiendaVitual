@@ -24,8 +24,9 @@
             <input type="password" name="contrasena" value="" />
             <br><br>
 
-            <input type="submit" value="enviar" name="enviar" />
             <a href="registro.php"><input type="button" value="registro" name="registro" /></a>
+            <input type="submit" value="enviar" name="enviar" />
+            
         </form>
 
         <?php
