@@ -13,7 +13,7 @@ session_start();
         <?php
         /* Verifico que hay un usuario guardado en la variable de sesion, lo cual me indica si se han logeado, si este es el caso entra en el if
           y se hace la comprobacion del rol para redirigir al usuario a su menu personalizado en funcion de este */
-        if (isset($_SESSION['usuario']))
+        if (isset($_SESSION['usuario']) && ((isset($_SESSION['rol']) == 'comprador') || isset($_SESSION['rol']) == 'vendedor'))
         {
             /* Guardamos en usuario_ingresado el usuario de la variable de session */
             $usuario_ingresado = $_SESSION['usuario'];
@@ -98,9 +98,10 @@ session_start();
         {
             /* En caso de que no exista ningun usuario en la variable de sesion indica que nadie se ha logeado por lo tanto le prohibimos el acceso y le ofrecemos 
               volver al login para que se autentique correctamente para acceder */
+            session_destroy();
             print "ACCESO NO PERMITIDO";
             ?>
-            <a href="login.php">Volver al Login</a>
+            <br><a href="login.php">Volver al Login</a><br><br>
 
     <?php
 }
