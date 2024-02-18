@@ -5,6 +5,7 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <?php
+
 function imprimirCestaBorrar($cesta) {
     ?>
 
@@ -92,6 +93,8 @@ function imprimirCestaBorrar($cesta) {
         <?php
         /* inicio sesion */
         session_start();
+        
+        if (isset($_SESSION['usuario']) && isset($_SESSION['rol']) == 'comprador') {
 
         /* Indicamos que haga referencia a usar la clase cesta y product */
         require_once './Cesta.php';
@@ -115,7 +118,7 @@ function imprimirCestaBorrar($cesta) {
 
         $consulta = mysqli_query($conexion, $consulta)
                 or die("Fallo en la consulta");
-        
+
         /* Sacamos la fila */
         //$datosConsulta = mysqli_fetch_assoc($consulta);
         ?>
@@ -154,7 +157,10 @@ function imprimirCestaBorrar($cesta) {
             <input type="submit" value="Añadir a la cesta" name="enviar" />
 
         </form>
-       
+
+        <br><br>
+        <a href="menu.php">Volver al Menu</a>
+
         <?php
         /* Si nos ha llegado las cantidades del libro que se quiere comprar entra en el if */
         if (isset($_POST['cantidad'])) {
@@ -216,10 +222,10 @@ function imprimirCestaBorrar($cesta) {
                 // Iterar sobre todos los elementos de $titulosMarcados
                 foreach ($titulosMarcados as $tituloMarcado) {
                     if ($tituloProducto == $tituloMarcado) {
-                        
+
                         // Eliminar el producto que coincide con el título
                         $cesta->eliminarProducto($indice);
-                        
+
                         //Reindexamos indices de cesta para no dejar huecos despues del borrado
                         $cesta->reindexar();
                         // No es necesario seguir iterando, ya encontramos una coincidencia
@@ -232,6 +238,16 @@ function imprimirCestaBorrar($cesta) {
 
             // Mostrar la cesta actualizada
             imprimirCestaBorrar($cesta);
+        }
+        
+        } else{
+             /* Si no hay nadie logeado se le indica que no tiene acceso permitido y se le proporciona un enlace de vuelta al login */
+            session_destroy();
+            print "ACCESO NO PERMITIDO";
+            ?>
+
+            <br><a href="login.php">Volver al Login</a><br><br>
+            <?php
         }
         ?>
     </body>
