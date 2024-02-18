@@ -52,7 +52,7 @@ function imprimirCestaBorrar($cesta) {
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Catálogo</title>
+        <title>Catálogo de Compra</title>
 
         <style>
 
