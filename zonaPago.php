@@ -32,6 +32,8 @@ and open the template in the editor.
     <body>
         <?php
         session_start();
+        
+        if (isset($_SESSION['usuario']) && isset($_SESSION['rol']) == 'comprador') {
 
         /* Obtenemos la conexion a la base de datos y usamos su funcion getConn() */
         include 'conexion.php';
@@ -85,6 +87,9 @@ and open the template in the editor.
 
             <input type="submit" name="enviar" value="Pagar">
         </form>
+        
+        <br><br>
+        <a href="catalogo.php">Volver</a>
 
         <?php
         if (isset($_REQUEST['enviar']))
@@ -131,9 +136,17 @@ and open the template in the editor.
             header("Location: menu.php");
             exit;
         }
+        } else {
+             /* Si no hay nadie logeado se le indica que no tiene acceso permitido y se le proporciona un enlace de vuelta al login */
+            session_destroy();
+            print "ACCESO NO PERMITIDO";
+            ?>
+
+            <br><a href="login.php">Volver al Login</a><br><br>
+            <?php
+        }
+
         ?>
-
-
 
     </body>
 </html>
