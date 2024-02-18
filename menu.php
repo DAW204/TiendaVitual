@@ -62,7 +62,7 @@ session_start();
 
 
                     <input type="submit" value="verSolicitudes" name="enviar" />
-                    <input type="submit" value="CambiarEstados" name="enviar" /><br>
+                    <input type="submit" value="CambiarEstados" name="enviar" /><br><br>
 
 
 
@@ -73,7 +73,7 @@ session_start();
                     ?>
 
                     <input type="submit" value="Comprar" name="enviar" />
-                    <input type="submit" value="EstadoPedido" name="enviar" /><br>
+                    <input type="submit" value="EstadoPedido" name="enviar" /><br><br>
 
         <?php
     }
