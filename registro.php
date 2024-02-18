@@ -80,7 +80,7 @@ and open the template in the editor.
             <br><br>
             
             
-            <a href="login.php"><input type="button" value="Cancelar" name="cancelar" /></a>
+            <a href="login.php"><input type="button" value="Volver a Login" name="cancelar" /></a>
             <input type="submit" value="Registrar" name="enviar" /><br><br>
 
         </form>
