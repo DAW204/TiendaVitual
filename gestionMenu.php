@@ -10,15 +10,41 @@ and open the template in the editor.
         <title>Gestión</title>
 
         <style>
+            * {
+                font-family: Helvetica, Verdana, sans-serif;
+                text-align: center;
+            }
+            
+            input {
+                border-radius: 4px;
+            }
+            
+            input:hover {
+                background-color: lightskyblue;
+            }
+            
+            h1 {
+                color: dodgerblue;
+            }
 
             table{
-
-                width: 60%;
+                margin-left: auto;
+                margin-right: auto;
+                width: 80%;
 
             }
             tr
             {
                 height: 40px
+            }
+
+            th {
+                background-color: lightskyblue;
+            }
+
+            td {
+                padding-left: 20px;
+                text-align: left;
             }
             table, tr, td,th
             {
@@ -26,6 +52,12 @@ and open the template in the editor.
                 border-collapse: collapse;
 
             }
+
+            .checkbox {
+                text-align: center;
+            }
+
+
 
         </style>
     </head>
@@ -53,9 +85,12 @@ and open the template in the editor.
 
             /* Este if evalua que se haya seleccionado algo en el menu, si es que si entra */
             if (isset($_SESSION['opcionMenu'])) {
+
+//ROL VENDEDOR (ADMIN)
+//OPCION VER SOLICITUDES
                 /* Si el boton pulsado es ver solicitudes entra */
-                if ($_SESSION['opcionMenu'] == 'verSolicitudes') {
-                    echo "<h1>GESTION DE SOLICITUDES</h1>";
+                if ($_SESSION['opcionMenu'] == 'VerSolicitudes') {
+                    echo "<h1>GESTION DE SOLICITUDES</h1><hr>";
 
                     /* Se compreba que se haya pulsado el boton de cambiar */
                     if (isset($_REQUEST['cambiar'])) {
@@ -126,94 +161,12 @@ and open the template in the editor.
                     </form>
                     <?php
                 }
-
-                /* Si el boton que se pulsa en el menu es comprar (por parte del comprador), entra en el if */
-                if ($_SESSION['opcionMenu'] == 'Comprar') {
-                    /* Redirigimos a la página especificada, en este caso al catalogo */
-                    header("Location: catalogo.php");
-                    exit;
-                }
-
-                /* Si el boton que se pulsa en el menu es Estado pedido (comprador) entra en el if */
-                if ($_SESSION['opcionMenu'] == 'EstadoPedido') {
-                    echo "<h1>PEDIDOS REALIZADOS</h1>";
-                    /* Aqui le mostramos los pedidos que tiene y en que estados estan */
-                    ?>
-
-                    <form action="gestionMenu.php" method="POST">
-
-                        <label for="opcion">Selecciona el estado del pedido:</label>
-                        <select name="opcion" id="opcion">
-                            <option value="procesado">Procesado</option>
-                            <option value="enviado">Enviado</option>
-                            <option value="reparto">En Reparto</option>
-                            <option value="entregado">Entregado</option>
-                            <option value="todos">Ver todos</option>
-                        </select>
-                        <input type="submit" value="Enviar" name="seleccion">
-
-                    </form>
-                    <?php
-                    if (isset($_REQUEST['seleccion'])) {
-                        /* Recojo el id del usuario para utilizarlo en la select y sacar sus pedidos y el estado de pedido elegido */
-                        $id_usuario = $_SESSION['id_usuario'];
-                        $estadoSelecionado = $_POST['opcion'];
-
-
-                        /* Si el usuario seleciona la opcion de todos enrta en el if y vera todos los pedidos que tenga */
-                        if ($estadoSelecionado == 'todos') {
-                            $consulta = "SELECT pedido.id_pedido, pedido.estadoPedido AS Estado, pedido.facturado AS TOTAL, 
-                                     SUM(detallePedido.cantidad) AS Articulos FROM pedido
-                                     INNER JOIN detallePedido ON pedido.id_pedido = detallePedido.id_pedido
-                                     WHERE pedido.id_usuario =$id_usuario GROUP BY pedido.id_pedido, pedido.estadoPedido, pedido.facturado;";
-                        } else {
-                            /* Realizamos la consulta conforme al estado selecionado para que nos devuelva id de pedido, el estado del mismo, asi como el total del precio y la cantidad
-                              de articulos totales que contiene el pedido */
-                            $consulta = "SELECT pedido.id_pedido, pedido.estadoPedido AS Estado, pedido.facturado AS TOTAL, 
-                                     SUM(detallePedido.cantidad) AS Articulos FROM pedido
-                                     INNER JOIN detallePedido ON pedido.id_pedido = detallePedido.id_pedido
-                                     WHERE pedido.id_usuario =$id_usuario AND pedido.estadoPedido = '$estadoSelecionado'GROUP BY pedido.id_pedido, pedido.estadoPedido, pedido.facturado;";
-                        }
-
-
-                        $consulta = mysqli_query($conexion, $consulta)
-                                or die("Fallo en la consulta");
-
-
-                        /* Comprobamos si hay resultados */
-                        if (mysqli_num_rows($consulta) > 0) {
-                            /* Sacamos la tabla con todos los datos necesarios del pedido, estado etc... */
-                            echo "<table>";
-                            echo "<tr>";
-
-                            echo "<th>ID PEDIDO</th>";
-                            echo "<th>ESTADO PEDIDO</th>";
-                            echo "<th>COSTE</th>";
-                            echo "<th>TOTAL ARTICULOS</th>";
-
-                            echo "</tr>";
-
-                            /* Recorremos todos los registros que nos devuelve la consulta */
-                            while ($row = mysqli_fetch_assoc($consulta)) {
-                                echo "<tr>";
-                                echo "<td>" . $row['id_pedido'] . "</td>";
-                                echo "<td>" . $row['Estado'] . "</td>";
-                                echo "<td>" . $row['TOTAL'] . "</td>";
-                                echo "<td>" . $row['Articulos'] . "</td>";
-                                echo "</tr>";
-                            }
-
-                            echo "</table>";
-                        } else {
-                            echo "No hay opciones disponibles.";
-                        }
-                    }
-                }
-
+//ROL VENDEDOR (ADMIN)
+//OPCION CAMBIAR ESTADOS
                 /* Si el boton que se pulsa en le menu es cambiar estados (vendedor), entra en el  if */
                 if ($_SESSION['opcionMenu'] == 'CambiarEstados') {
 
-                    echo "<h1>CAMBIAR ESTADOS</h1>";
+                    echo "<h1>Cambiar estados de los pedidos</h1><hr>";
                     /* Aqui le mostramos los pedidos que tiene y en que estados estan para que pueda cambiarlos */
                     ?>
 
@@ -328,22 +281,165 @@ and open the template in the editor.
                         }
                     }
                 }
-            }
-            ?>
 
-            <br><br>
-            <a href="menu.php">Volver al Menu</a>
+//ROL VENDEDOR (ADMIN)
+//OPCION INSERTAR NUEVO LIBRO
 
+                if ($_SESSION['opcionMenu'] == 'InsertarLibro') {
+                    echo "<h1>AÑADIR NUEVO TÍTULO</h1>";
+                    if (isset($_REQUEST['insertar'])) {
+                        /* Verifico que los datos se han introducido correctamente y en la cosulta realizo el insert con los datos requeriddos */
+                        if (isset($_REQUEST['isbn']) && isset($_REQUEST['titulo']) && isset($_REQUEST['autor']) && isset($_REQUEST['editorial']) && isset($_REQUEST['precio'])) {
+                            $consulta = "INSERT INTO libro(isbn, titulo, autor, editorial, precio) "
+                                    . "VALUES ('" . $_REQUEST['isbn'] . "','" . $_REQUEST['titulo'] . "', '" . $_REQUEST['autor']
+                                    . "','" . $_REQUEST['editorial'] . "','" . $_REQUEST['precio'] . "')";
+                            $consulta = mysqli_query($conexion, $consulta)
+                                    or die("Fallo en la consulta");
+
+                            print "Se ha registrado el nuevo libro con éxito";
+                        } else {
+                            print 'No se ha podido registrar el nuevo libro. Revisa los datos.';
+                        }
+                    } else {
+                        ?>
+                        <form action="gestionMenu.php" method="POST">
+                            <hr>
+                            <h3>Introduce los datos del libro</h3>
+                            <br>
+                            ISBN:
+                            <br>
+                            <input type="number" name="isbn" min="0" value="" required/>
+                            <br><br>
+
+                            Título:
+                            <br>
+                            <input type="text" name="titulo" value="" required/>
+                            <br><br>
+
+                            Autor:
+                            <br>
+                            <input type="text" name="autor" value="" required/>
+                            <br><br>
+
+                            Editorial:
+                            <br>
+                            <input type="text" name="editorial" value="" required/>
+                            <br><br>
+
+                            Precio:
+                            <br>
+                            <input type="number" name="precio" step="0.01" min="0" placeholder="0.00" value="" required/>
+                            <br><br>
+
+                            <input type="submit" name="insertar" value="Insertar"> 
+                        </form>
+
+                        <?php
+                    }
+                }
+
+//ROL COMPRADOR
+//OPCION COMPRAR
+                /* Si el boton que se pulsa en el menu es comprar (por parte del comprador), entra en el if */
+                if ($_SESSION['opcionMenu'] == 'Comprar') {
+                    /* Redirigimos a la página especificada, en este caso al catalogo */
+                    header("Location: catalogo.php");
+                    exit;
+                }
+//ROL COMPRADOR
+//OPCION ESTADO PEDIDO
+                /* Si el boton que se pulsa en el menu es Estado pedido (comprador) entra en el if */
+                if ($_SESSION['opcionMenu'] == 'EstadoPedido') {
+                    echo "<h1>PEDIDOS REALIZADOS</h1><hr>";
+                    /* Aqui le mostramos los pedidos que tiene y en que estados estan */
+                    ?>
+
+                    <br><form action="gestionMenu.php" method="POST">
+
+                        <label for="opcion">Selecciona el estado del pedido:</label>
+                        <select name="opcion" id="opcion">
+                            <option value="procesado">Procesado</option>
+                            <option value="enviado">Enviado</option>
+                            <option value="reparto">En Reparto</option>
+                            <option value="entregado">Entregado</option>
+                            <option value="todos">Ver todos</option>
+                        </select>
+                        <input type="submit" value="Enviar" name="seleccion">
+
+                    </form><br><br>
             <?php
-        } else {
-            /* Si no hay nadie logeado se le indica que no tiene acceso permitido y se le proporciona un enlace de vuelta al login */
-            session_destroy();
-            print "ACCESO NO PERMITIDO";
-            ?>
+            if (isset($_REQUEST['seleccion'])) {
+                /* Recojo el id del usuario para utilizarlo en la select y sacar sus pedidos y el estado de pedido elegido */
+                $id_usuario = $_SESSION['id_usuario'];
+                $estadoSelecionado = $_POST['opcion'];
+
+
+                /* Si el usuario seleciona la opcion de todos enrta en el if y vera todos los pedidos que tenga */
+                if ($estadoSelecionado == 'todos') {
+                    $consulta = "SELECT pedido.id_pedido, pedido.estadoPedido AS Estado, pedido.facturado AS TOTAL, 
+                                     SUM(detallePedido.cantidad) AS Articulos FROM pedido
+                                     INNER JOIN detallePedido ON pedido.id_pedido = detallePedido.id_pedido
+                                     WHERE pedido.id_usuario =$id_usuario GROUP BY pedido.id_pedido, pedido.estadoPedido, pedido.facturado;";
+                } else {
+                    /* Realizamos la consulta conforme al estado selecionado para que nos devuelva id de pedido, el estado del mismo, asi como el total del precio y la cantidad
+                      de articulos totales que contiene el pedido */
+                    $consulta = "SELECT pedido.id_pedido, pedido.estadoPedido AS Estado, pedido.facturado AS TOTAL, 
+                                     SUM(detallePedido.cantidad) AS Articulos FROM pedido
+                                     INNER JOIN detallePedido ON pedido.id_pedido = detallePedido.id_pedido
+                                     WHERE pedido.id_usuario =$id_usuario AND pedido.estadoPedido = '$estadoSelecionado'GROUP BY pedido.id_pedido, pedido.estadoPedido, pedido.facturado;";
+                }
+
+
+                $consulta = mysqli_query($conexion, $consulta)
+                        or die("Fallo en la consulta");
+
+
+                /* Comprobamos si hay resultados */
+                if (mysqli_num_rows($consulta) > 0) {
+                    /* Sacamos la tabla con todos los datos necesarios del pedido, estado etc... */
+                    echo "<table>";
+                    echo "<tr>";
+
+                    echo "<th>ID PEDIDO</th>";
+                    echo "<th>ESTADO PEDIDO</th>";
+                    echo "<th>COSTE</th>";
+                    echo "<th>TOTAL ARTICULOS</th>";
+
+                    echo "</tr>";
+
+                    /* Recorremos todos los registros que nos devuelve la consulta */
+                    while ($row = mysqli_fetch_assoc($consulta)) {
+                        echo "<tr>";
+                        echo "<td>" . $row['id_pedido'] . "</td>";
+                        echo "<td>" . $row['Estado'] . "</td>";
+                        echo "<td>" . $row['TOTAL'] . "</td>";
+                        echo "<td>" . $row['Articulos'] . "</td>";
+                        echo "</tr>";
+                    }
+
+                    echo "</table>";
+                } else {
+                    echo "No hay opciones disponibles.";
+                }
+            }
+        }
+    }
+    ?>
+
+            <br><hr><hr>
+            <a href="menu.php">Volver al Menu</a>
+            <hr><hr>
+
+    <?php
+} else {
+    /* Si no hay nadie logeado se le indica que no tiene acceso permitido y se le proporciona un enlace de vuelta al login */
+    session_destroy();
+    print "ACCESO NO PERMITIDO";
+    ?>
 
             <br><a href="login.php">Volver al Login</a><br><br>
-            <?php
-        }
-        ?>
+    <?php
+}
+?>
     </body>
 </html>

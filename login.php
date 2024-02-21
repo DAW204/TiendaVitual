@@ -4,6 +4,26 @@
     <head>
         <meta charset="UTF-8">
         <title>Login</title>
+        <style>
+            * {
+                font-family: Helvetica, Verdana, sans-serif;
+                text-align: center;
+            }
+            
+            input {
+                border-radius: 4px;
+            }
+            
+            input:hover {
+                background-color: lightskyblue;
+            }
+            
+            h1 {
+                color: dodgerblue;
+            }
+            
+           
+        </style>
     </head>
     <body>
 
@@ -11,10 +31,10 @@
         <form name="form" action="" method="POST" enctype="multipart/form-data">
 
             <h1>LOGIN</h1>
-            <br><br>
+            <hr>
+            <h3>Accede y encuentra lo que buscas</h3>
 
             Nombre usuario:
-
             <br><br>
             <input type="text" name="usuario" value="" />
             <br><br>
@@ -24,8 +44,12 @@
             <input type="password" name="contrasena" value="" />
             <br><br>
 
-            <a href="registro.php"><input type="button" value="registro" name="registro" /></a>
-            <input type="submit" value="enviar" name="enviar" />
+            <input type="submit" value="Enviar" name="enviar" />
+            <br>
+            <hr>
+            <p>¿No tienes una cuenta? Registrate aquí</p>
+            <a href="registro.php"><input type="button" value="Registro" name="registro" /></a>
+            
             
         </form>
 
