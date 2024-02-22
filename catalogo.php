@@ -249,8 +249,6 @@ function imprimirCestaBorrar($cesta) {
                             // Eliminar el producto que coincide con el título
                             $cesta->eliminarProducto($indice);
 
-                            //Reindexamos indices de cesta para no dejar huecos despues del borrado
-                            $cesta->reindexar();
                             // No es necesario seguir iterando, ya encontramos una coincidencia
                             break;
                         }
