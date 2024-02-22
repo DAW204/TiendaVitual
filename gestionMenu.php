@@ -14,15 +14,15 @@ and open the template in the editor.
                 font-family: Helvetica, Verdana, sans-serif;
                 text-align: center;
             }
-            
+
             input {
                 border-radius: 4px;
             }
-            
+
             input:hover {
                 background-color: lightskyblue;
             }
-            
+
             h1 {
                 color: dodgerblue;
             }
@@ -180,7 +180,7 @@ and open the template in the editor.
                             <option value="entregado">Entregado</option>
                             <option value="todos">Ver todos</option>
                         </select>
-                        <input type="submit" value="Enviar" name="seleccion">
+                        <input type="submit" value="Consultar" name="seleccion">
 
                     </form>
 
@@ -258,7 +258,7 @@ and open the template in the editor.
                                 echo "</table>";
                                 echo "<br><br><br>";
                             } else {
-                                echo "No hay opciones disponibles.";
+                                echo "No hay opciones disponibles.<br><br><br>";
                             }
                             ?>
 
@@ -287,16 +287,32 @@ and open the template in the editor.
 
                 if ($_SESSION['opcionMenu'] == 'InsertarLibro') {
                     echo "<h1>AÑADIR NUEVO TÍTULO</h1>";
+                    /* Compruebo que se ha enviado el formulario */
                     if (isset($_REQUEST['insertar'])) {
-                        /* Verifico que los datos se han introducido correctamente y en la cosulta realizo el insert con los datos requeriddos */
+                        /* Verifica que los datos se han recibido correctamente, si no es así se le indica al usuario */
                         if (isset($_REQUEST['isbn']) && isset($_REQUEST['titulo']) && isset($_REQUEST['autor']) && isset($_REQUEST['editorial']) && isset($_REQUEST['precio'])) {
-                            $consulta = "INSERT INTO libro(isbn, titulo, autor, editorial, precio) "
-                                    . "VALUES ('" . $_REQUEST['isbn'] . "','" . $_REQUEST['titulo'] . "', '" . $_REQUEST['autor']
-                                    . "','" . $_REQUEST['editorial'] . "','" . $_REQUEST['precio'] . "')";
+                            
+                            
+                            /*Se obtiene la información del título enviado y se guarda en una variable*/
+                            $tituloAComprobar = $_REQUEST['titulo'];
+                            /* Realizo una consulta buscando coincidencias con el titulo */
+                            $consulta = "SELECT * FROM libro WHERE titulo = '" . $tituloAComprobar . "';";
                             $consulta = mysqli_query($conexion, $consulta)
                                     or die("Fallo en la consulta");
+                            /* Si no hay coincidencias en la consulta procede a insertar el nuevo libro en la tabla
+                             * Si por el contrario sí hay, informa al usuario con un mensaje */
+                            if (mysqli_num_rows($consulta) == 0) {
 
-                            print "Se ha registrado el nuevo libro con éxito";
+                                $consulta = "INSERT INTO libro(isbn, titulo, autor, editorial, precio) "
+                                        . "VALUES ('" . $_REQUEST['isbn'] . "','" . $_REQUEST['titulo'] . "', '" . $_REQUEST['autor']
+                                        . "','" . $_REQUEST['editorial'] . "','" . $_REQUEST['precio'] . "')";
+                                $consulta = mysqli_query($conexion, $consulta)
+                                        or die("Fallo en la consulta");
+
+                                print "Se ha registrado el nuevo libro con éxito";
+                            } else {
+                                print "Ya existe un libro con ese mismo título";
+                            }
                         } else {
                             print 'No se ha podido registrar el nuevo libro. Revisa los datos.';
                         }
@@ -367,79 +383,79 @@ and open the template in the editor.
                         <input type="submit" value="Enviar" name="seleccion">
 
                     </form><br><br>
-            <?php
-            if (isset($_REQUEST['seleccion'])) {
-                /* Recojo el id del usuario para utilizarlo en la select y sacar sus pedidos y el estado de pedido elegido */
-                $id_usuario = $_SESSION['id_usuario'];
-                $estadoSelecionado = $_POST['opcion'];
+                    <?php
+                    if (isset($_REQUEST['seleccion'])) {
+                        /* Recojo el id del usuario para utilizarlo en la select y sacar sus pedidos y el estado de pedido elegido */
+                        $id_usuario = $_SESSION['id_usuario'];
+                        $estadoSelecionado = $_POST['opcion'];
 
 
-                /* Si el usuario seleciona la opcion de todos enrta en el if y vera todos los pedidos que tenga */
-                if ($estadoSelecionado == 'todos') {
-                    $consulta = "SELECT pedido.id_pedido, pedido.estadoPedido AS Estado, pedido.facturado AS TOTAL, 
+                        /* Si el usuario seleciona la opcion de todos enrta en el if y vera todos los pedidos que tenga */
+                        if ($estadoSelecionado == 'todos') {
+                            $consulta = "SELECT pedido.id_pedido, pedido.estadoPedido AS Estado, pedido.facturado AS TOTAL, 
                                      SUM(detallePedido.cantidad) AS Articulos FROM pedido
                                      INNER JOIN detallePedido ON pedido.id_pedido = detallePedido.id_pedido
                                      WHERE pedido.id_usuario =$id_usuario GROUP BY pedido.id_pedido, pedido.estadoPedido, pedido.facturado;";
-                } else {
-                    /* Realizamos la consulta conforme al estado selecionado para que nos devuelva id de pedido, el estado del mismo, asi como el total del precio y la cantidad
-                      de articulos totales que contiene el pedido */
-                    $consulta = "SELECT pedido.id_pedido, pedido.estadoPedido AS Estado, pedido.facturado AS TOTAL, 
+                        } else {
+                            /* Realizamos la consulta conforme al estado selecionado para que nos devuelva id de pedido, el estado del mismo, asi como el total del precio y la cantidad
+                              de articulos totales que contiene el pedido */
+                            $consulta = "SELECT pedido.id_pedido, pedido.estadoPedido AS Estado, pedido.facturado AS TOTAL, 
                                      SUM(detallePedido.cantidad) AS Articulos FROM pedido
                                      INNER JOIN detallePedido ON pedido.id_pedido = detallePedido.id_pedido
                                      WHERE pedido.id_usuario =$id_usuario AND pedido.estadoPedido = '$estadoSelecionado'GROUP BY pedido.id_pedido, pedido.estadoPedido, pedido.facturado;";
-                }
+                        }
 
 
-                $consulta = mysqli_query($conexion, $consulta)
-                        or die("Fallo en la consulta");
+                        $consulta = mysqli_query($conexion, $consulta)
+                                or die("Fallo en la consulta");
 
 
-                /* Comprobamos si hay resultados */
-                if (mysqli_num_rows($consulta) > 0) {
-                    /* Sacamos la tabla con todos los datos necesarios del pedido, estado etc... */
-                    echo "<table>";
-                    echo "<tr>";
+                        /* Comprobamos si hay resultados */
+                        if (mysqli_num_rows($consulta) > 0) {
+                            /* Sacamos la tabla con todos los datos necesarios del pedido, estado etc... */
+                            echo "<table>";
+                            echo "<tr>";
 
-                    echo "<th>ID PEDIDO</th>";
-                    echo "<th>ESTADO PEDIDO</th>";
-                    echo "<th>COSTE</th>";
-                    echo "<th>TOTAL ARTICULOS</th>";
+                            echo "<th>ID PEDIDO</th>";
+                            echo "<th>ESTADO PEDIDO</th>";
+                            echo "<th>COSTE</th>";
+                            echo "<th>TOTAL ARTICULOS</th>";
 
-                    echo "</tr>";
+                            echo "</tr>";
 
-                    /* Recorremos todos los registros que nos devuelve la consulta */
-                    while ($row = mysqli_fetch_assoc($consulta)) {
-                        echo "<tr>";
-                        echo "<td>" . $row['id_pedido'] . "</td>";
-                        echo "<td>" . $row['Estado'] . "</td>";
-                        echo "<td>" . $row['TOTAL'] . "</td>";
-                        echo "<td>" . $row['Articulos'] . "</td>";
-                        echo "</tr>";
+                            /* Recorremos todos los registros que nos devuelve la consulta */
+                            while ($row = mysqli_fetch_assoc($consulta)) {
+                                echo "<tr>";
+                                echo "<td>" . $row['id_pedido'] . "</td>";
+                                echo "<td>" . $row['Estado'] . "</td>";
+                                echo "<td>" . $row['TOTAL'] . "</td>";
+                                echo "<td>" . $row['Articulos'] . "</td>";
+                                echo "</tr>";
+                            }
+
+                            echo "</table>";
+                        } else {
+                            echo "No hay opciones disponibles.";
+                        }
                     }
-
-                    echo "</table>";
-                } else {
-                    echo "No hay opciones disponibles.";
                 }
             }
-        }
-    }
-    ?>
+            ?>
 
             <br><hr><hr>
             <a href="menu.php">Volver al Menu</a>
             <hr><hr>
 
-    <?php
-} else {
-    /* Si no hay nadie logeado se le indica que no tiene acceso permitido y se le proporciona un enlace de vuelta al login */
-    session_destroy();
-    print "ACCESO NO PERMITIDO";
-    ?>
+            <?php
+        } else {
+            /* Si no hay nadie logeado se le indica que no tiene acceso permitido y se le proporciona un enlace de vuelta al login */
+            session_destroy();
+            print "ACCESO NO PERMITIDO";
+            ?>
 
             <br><a href="login.php">Volver al Login</a><br><br>
-    <?php
-}
-?>
+            <?php
+        }
+        ?>
     </body>
 </html>
