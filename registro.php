@@ -13,20 +13,20 @@ and open the template in the editor.
                 font-family: Helvetica, Verdana, sans-serif;
                 text-align: center;
             }
-            
+
             input {
                 border-radius: 4px;
             }
-            
+
             input:hover {
                 background-color: lightskyblue;
             }
-            
+
             h1 {
                 color: dodgerblue;
             }
-            
-           
+
+
         </style>
     </head>
     <body>
@@ -39,25 +39,34 @@ and open the template in the editor.
 
 
         /* Si se ha enviado los datos del formulario, usuario y contraseña del nuevo usuario entra en el if */
-        if (isset($_POST['enviar']))
-        {
+        if (isset($_POST['enviar'])) {
             /* Verifico que usuario y contraseña no esten vacios y despues en la cosulta realizo el insert con los datos requeriddos */
-            if (isset($_REQUEST['nombre']) && isset($_REQUEST['apellido']) && isset($_REQUEST['dni']) && isset($_REQUEST['usuario']) 
-                    && isset($_REQUEST['contrasena']) && isset($_REQUEST['email']) && isset($_REQUEST['telefono']))
-            {
-
-
-                $consulta = "INSERT INTO usuario(nombre, apellido, usuario, contrasena, email, telefono, dni) "
-                        . "VALUES ('" . $_REQUEST['nombre'] . "','" . $_REQUEST['apellido'] . "', '" . $_REQUEST['usuario'] 
-                        . "','" . $_REQUEST['contrasena'] . "','" . $_REQUEST['email'] . "','" . $_REQUEST['telefono'] . "','" . $_REQUEST['dni'] . "')";
-
-
+            if (isset($_REQUEST['nombre']) && isset($_REQUEST['apellido']) && isset($_REQUEST['dni']) && isset($_REQUEST['usuario']) && isset($_REQUEST['contrasena']) && isset($_REQUEST['email']) && isset($_REQUEST['telefono'])) {
+                /* Almacena el dato obtenido para usuario en el formulario dentro de una varible */
+                $usuarioAComprobar = $_REQUEST['usuario'];
+                
+                /* Utilizo esa variable para realizar una consulta en la BD buscando coincidencias */
+                $consulta = "SELECT * FROM usuario WHERE usuario = '" . $usuarioAComprobar . "';";
                 $consulta = mysqli_query($conexion, $consulta)
                         or die("Fallo en la consulta");
+                
+                /* Si no hay coincidencias, procede a insertar los datos del formulario en una nueva fila de la BD
+                 * Si hay una coincidencia, informa por mensaje de que se debe poner otro nombre de usuario */
+                if (mysqli_num_rows($consulta) == 0) {
 
-                print "Se ha creado el usuario";
-            } else
-            {
+                    $consulta = "INSERT INTO usuario(nombre, apellido, usuario, contrasena, email, telefono, dni) "
+                            . "VALUES ('" . $_REQUEST['nombre'] . "','" . $_REQUEST['apellido'] . "', '" . $_REQUEST['usuario']
+                            . "','" . $_REQUEST['contrasena'] . "','" . $_REQUEST['email'] . "','" . $_REQUEST['telefono'] . "','" . $_REQUEST['dni'] . "')";
+
+
+                    $consulta = mysqli_query($conexion, $consulta)
+                            or die("Fallo en la consulta");
+
+                    print "Se ha creado el usuario";
+                } else {
+                    print 'Ya existe un usuario con ese nombre de usuario (login)';
+                }
+            } else {
                 print 'No se ha rellenado alguno de los campos';
             }
         }
@@ -67,7 +76,7 @@ and open the template in the editor.
         <form name="form" action="" method="POST" enctype="multipart/form-data">
 
             <h1>REGISTRO</h1>
-            
+
             <hr>
             <h3>Introduce tus datos</h3>
             <br>
@@ -80,7 +89,7 @@ and open the template in the editor.
             <br>
             <input type="text" name="apellido" value="" />
             <br><br>
-            
+
             DNI/NIF:
             <br>
             <input type="text" name="dni" pattern="^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$" value="" />
@@ -90,7 +99,7 @@ and open the template in the editor.
             <br>
             <input type="text" name="usuario" value="" />
             <br><br>
-            
+
             Contraseña:
             <br>
             <input type="password" name="contrasena" value="" />
@@ -102,7 +111,7 @@ and open the template in the editor.
             Telefono:<br>
             <input type="tel" id="telefono" name="telefono" pattern="[6789]\d{8}" placeholder="Ej. 612345678" required>
             <br><br>
-           
+
             <input type="submit" value="Registrar" name="enviar" /><br><br>
             <hr>
             <p>¿No te quieres registrar, o ya lo hiciste con éxito?</p>
