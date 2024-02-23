@@ -59,11 +59,11 @@ function imprimirCestaBorrar($cesta) {
                 font-family: Helvetica, Verdana, sans-serif;
                 text-align: center;
             }
-            
+
             input {
                 border-radius: 4px;
             }
-            
+
             input:hover {
                 background-color: lightskyblue;
             }
@@ -254,6 +254,9 @@ function imprimirCestaBorrar($cesta) {
                         }
                     }
                 }
+
+                //Reindexamos indices de cesta para no dejar huecos despues del borrado
+                $cesta->reindexar();
                 // Actualizar la variable de sesión con la cesta modificada
                 $_SESSION['cesta'] = $cesta->serialize();
 
